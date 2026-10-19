@@ -1,0 +1,6 @@
+{
+  "name": "Cordchain",
+  "description": "Cross-server Discord stock market, community token exchange, and ad rewards dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

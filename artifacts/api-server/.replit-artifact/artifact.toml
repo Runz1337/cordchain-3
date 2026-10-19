@@ -1,32 +1,37 @@
 kind = "api"
-previewPath = "/api" # TODO - should be excluded from preview in the first place
-title = "API Server"
-version = "1.0.0"
+previewPath = "/api"
+title = "CordChain API"
+version = "1.1.0"
 id = "3B4_FFSkEVBkAeYMFRJ2e"
 
+# The canonical web backend is cordchain/api.py served by `run_api.sh` (uvicorn,
+# port 5000). This manifest keeps the /api path prefix mapped to it so browser
+# requests from the root dev URL reach the real FastAPI service instead of the
+# legacy QA mirror.
 [[services]]
-localPort = 8080
-name = "API Server"
+localPort = 5000
+name = "CordChain API"
 paths = ["/api"]
 
+[services.env]
+PORT = "5000"
+
 [services.development]
-run = "pnpm --filter @workspace/api-server run dev"
+run = "bash run_api.sh"
 
 [services.production]
 
 [services.production.build]
-args = ["pnpm", "--filter", "@workspace/api-server", "run", "build"]
+args = ["pnpm", "store", "prune"]
 
 [services.production.build.env]
-NODE_ENV = "production"
+CI = "true"
 
 [services.production.run]
-# we don't run through pnpm to make startup faster in production
-args = ["node", "--enable-source-maps", "artifacts/api-server/dist/index.mjs"]
+args = ["bash", "run_api.sh"]
 
 [services.production.run.env]
-PORT = "8080"
-NODE_ENV = "production"
+PORT = "5000"
 
 [services.production.health.startup]
-path = "/api/healthz"
+path = "/docs"
